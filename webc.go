@@ -1,4 +1,4 @@
-package main
+package webc
 
 import (
 	"io/ioutil"
