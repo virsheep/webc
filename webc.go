@@ -1,8 +1,10 @@
 package webc
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 func SimGet(requestUrl string) (respHttpCode int, respBody string, err error) {
@@ -31,10 +33,11 @@ func SimGet(requestUrl string) (respHttpCode int, respBody string, err error) {
 	return
 }
 
-func SimPost(reqeustUrl string, postData byte) (respHttpCode int, respBody sring, err error) {
+func SimPost(requestUrl string, postData []byte) (respHttpCode int, respBody string, err error) {
 
-	req, err := http.NewRequest("POST", requestUrl, postData)
+	req, err := http.NewRequest("POST", requestUrl, strings.NewReader(string(postData)))
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
@@ -44,6 +47,9 @@ func SimPost(reqeustUrl string, postData byte) (respHttpCode int, respBody sring
 	if err != nil {
 		return
 	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
 
 	respHttpCode = resp.StatusCode
 	respBody = string(body)
